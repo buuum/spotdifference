@@ -22,6 +22,7 @@ SpotDifference = (function() {
 
   SpotDifference.prototype.initialize = function() {
     this.differences = $("map[name=" + this.options.map_name + "] area").length;
+    $('img[usemap]').rwdImageMaps();
     $(this.options.image_div).css('position', 'relative');
     $("map[name=" + this.options.map_name + "] area").on('click', (function(_this) {
       return function(e) {
