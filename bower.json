@@ -3,7 +3,8 @@
   "homepage": "https://github.com/buuum/spotdifference",
   "description": "Spot the Difference Game with JQuery Edit",
   "main": [
-    "spotdifference/js/spotdifference.min.js"
+    "spotdifference/js/spotdifference.min.js",
+    "spotdifference/js/arearesponsive.min.js"
   ],
   "keywords": [
     "Spot the difference",
