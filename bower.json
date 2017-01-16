@@ -1,0 +1,21 @@
+{
+  "name": "spotdifference",
+  "homepage": "https://github.com/buuum/spotdifference",
+  "description": "Spot the Difference Game with JQuery Edit",
+  "main": [
+    "spotdifference/js/spotdifference.min.js"
+  ],
+  "keywords": [
+    "Spot the difference",
+    "game",
+    "Spot the difference game",
+    "jquery"
+  ],
+  "authors": [
+    "buuum"
+  ],
+  "dependencies": {
+    "jquery": ">=1.7"
+  },
+  "license": "MIT"
+}
