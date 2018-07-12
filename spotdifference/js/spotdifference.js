@@ -38,7 +38,7 @@ SpotDifference = (function() {
   SpotDifference.prototype.finded = function(element) {
     var time;
     element.remove();
-    this.options.onFind(this.differences - $("map[name=" + this.options.map_name + "] area").length, this.differences);
+    this.options.onFind(this.differences - $("map[name=" + this.options.map_name + "] area").length, this.differences, element);
     if ($("map[name=" + this.options.map_name + "] area").length <= 0) {
       time = new Date().getTime();
       return this.options.onEnd((time - this.start_time) / 1000);
@@ -46,14 +46,24 @@ SpotDifference = (function() {
   };
 
   SpotDifference.prototype.addMark = function(e) {
-    var mark, x, y;
-    x = e.pageX - $(this.options.image_div).offset().left;
-    y = e.pageY - $(this.options.image_div).offset().top;
+    var coords, element, h, mark, w, x, x1, x2, y, y1, y2;
+    element = $(e.target);
+    coords = element.attr('coords').split(',');
+    x1 = parseInt(coords[0]);
+    y1 = parseInt(coords[1]);
+    x2 = parseInt(coords[2]);
+    y2 = parseInt(coords[3]);
+    x = x1;
+    y = y1;
+    w = x2 - x1;
+    h = y2 - y1;
     mark = $('<i />').addClass(this.options.class_mark);
     mark.css('position', 'absolute');
     $(this.options.image_div).append(mark);
-    mark.css('top', y - (mark.height() / 2));
-    return mark.css('left', x - (mark.height() / 2));
+    mark.css('top', y);
+    mark.css('left', x);
+    mark.css('width', w + 'px');
+    return mark.css('height', h + 'px');
   };
 
   return SpotDifference;
