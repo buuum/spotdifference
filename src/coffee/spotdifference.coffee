@@ -1,7 +1,10 @@
 class SpotDifference
   constructor: ($options = {}) ->
     @options =
+      original_image_div: null
+      original_map_name: null
       image_div: '#findimage'
+      map_name: 'mapname'
       map_name: 'mapname'
       class_mark: 'mark'
       onLoad: (differences) ->
@@ -23,16 +26,28 @@ class SpotDifference
     $("map[name=#{@options.map_name}] area").on 'click', (e) =>
       e.preventDefault()
       @addMark(e)
+      @removeTargets(e)
       @finded($(e.target))
       return
+
+    if @options.original_map_name
+      $("map[name=#{@options.original_map_name}] area").on 'click', (e) =>
+        e.preventDefault()
+        @addMark(e)
+        @removeTargets(e)
+        @finded($(e.target))
+        return
 
     @options.onLoad @differences
 
     @start_time = new Date().getTime()
 
+  removeTargets: (e) =>
+    coords = $(e.target).attr('coords')
+    $("area[coords='#{coords}']").each (index, element )=>
+      element.remove()
 
   finded: (element) ->
-    element.remove()
     @options.onFind(@differences - $("map[name=#{@options.map_name}] area").length, @differences, element)
     if $("map[name=#{@options.map_name}] area").length <= 0
       time = new Date().getTime()
@@ -54,9 +69,11 @@ class SpotDifference
 
     mark = $('<i />').addClass(@options.class_mark);
     mark.css 'position', 'absolute'
-    $(@options.image_div).append mark
-
     mark.css 'top', y
     mark.css 'left', x
     mark.css 'width', w + 'px'
     mark.css 'height', h + 'px'
+
+    $(@options.image_div).append mark
+    if @options.original_image_div
+      $(@options.original_image_div).append mark.clone()

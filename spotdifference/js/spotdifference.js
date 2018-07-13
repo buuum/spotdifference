@@ -1,12 +1,17 @@
-var SpotDifference;
+var SpotDifference,
+  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
 SpotDifference = (function() {
   function SpotDifference($options) {
     if ($options == null) {
       $options = {};
     }
+    this.removeTargets = bind(this.removeTargets, this);
     this.options = {
+      original_image_div: null,
+      original_map_name: null,
       image_div: '#findimage',
+      map_name: 'mapname',
       map_name: 'mapname',
       class_mark: 'mark',
       onLoad: function(differences) {},
@@ -28,16 +33,36 @@ SpotDifference = (function() {
       return function(e) {
         e.preventDefault();
         _this.addMark(e);
+        _this.removeTargets(e);
         _this.finded($(e.target));
       };
     })(this));
+    if (this.options.original_map_name) {
+      $("map[name=" + this.options.original_map_name + "] area").on('click', (function(_this) {
+        return function(e) {
+          e.preventDefault();
+          _this.addMark(e);
+          _this.removeTargets(e);
+          _this.finded($(e.target));
+        };
+      })(this));
+    }
     this.options.onLoad(this.differences);
     return this.start_time = new Date().getTime();
   };
 
+  SpotDifference.prototype.removeTargets = function(e) {
+    var coords;
+    coords = $(e.target).attr('coords');
+    return $("area[coords='" + coords + "']").each((function(_this) {
+      return function(index, element) {
+        return element.remove();
+      };
+    })(this));
+  };
+
   SpotDifference.prototype.finded = function(element) {
     var time;
-    element.remove();
     this.options.onFind(this.differences - $("map[name=" + this.options.map_name + "] area").length, this.differences, element);
     if ($("map[name=" + this.options.map_name + "] area").length <= 0) {
       time = new Date().getTime();
@@ -59,11 +84,14 @@ SpotDifference = (function() {
     h = y2 - y1;
     mark = $('<i />').addClass(this.options.class_mark);
     mark.css('position', 'absolute');
-    $(this.options.image_div).append(mark);
     mark.css('top', y);
     mark.css('left', x);
     mark.css('width', w + 'px');
-    return mark.css('height', h + 'px');
+    mark.css('height', h + 'px');
+    $(this.options.image_div).append(mark);
+    if (this.options.original_image_div) {
+      return $(this.options.original_image_div).append(mark.clone());
+    }
   };
 
   return SpotDifference;
